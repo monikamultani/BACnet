@@ -35,6 +35,7 @@ import time
 import datetime
 from nacl.signing import SigningKey
 from nacl.encoding import HexEncoder
+import sys
 
 # determine platform
 system = platform.system() # currently only supports Linux (works on other platforms but the look and feel is not the same)
@@ -45,7 +46,7 @@ dirname = os.path.abspath(os.path.dirname(__file__))
 # Import from gruppe04
 folderG4 = os.path.join(dirname, '../../04-logMerge/eventCreationTool')
 sys.path.append(folderG4)
-import EventCreationTool
+from logStore.funcs.EventCreationTool import EventCreationTool
 
 # import gruppe07 interface
 folderG7 = os.path.join(dirname, '../../07-logStore/')
@@ -187,7 +188,7 @@ class DisplayFile(Frame):
         except FileExistsError:  # if this gives an error, then we know the file already exists.
             pass
 
-        # Convert back from hex String to bytes 
+        # Convert back from hex String to bytes
         byte_string = self.file.encode("utf-8")
 
         # Decode
@@ -478,12 +479,12 @@ class Chat(Frame):
                 self.person_list[i][2] = time.time()
 
         chat_type = self.chat_function.get_full_chat(self.partner[1])[0][0].split("#split:#")[3]  # get the type of the chat (private or group)
-    
+
         if chat_type == "private":
             self.username_label.config(text=TextWrapper.shorten_name(self.partner[0], 34))
         else:  # chat_type == "group"
             self.username_label.config(text=TextWrapper.shorten_name(self.partner[0], 27) + " (" + self.partner[1] + ")")
-    
+
         self.updateContent(self.partner[1])
 
     def check_for_new_messages(self, person_nr):
@@ -591,8 +592,8 @@ class Chat(Frame):
 
                 elif self.ButtonTask == 'private Chat' and self.ButtonType == 'create':
                     self.create_chat(self.id_field.get())
-                    
-                
+
+
                 if error_type == 'None':
                     self.BackTask = ""
                     self.ButtonType = ""
@@ -600,12 +601,12 @@ class Chat(Frame):
                     self.confirm_Button.grid_remove()
                     self.id_field.config(state=NORMAL)
                     self.back_Button.grid_remove()
-                    
+
                     self.create_Button.grid(row=0, column=1, sticky="ew")
                     self.join_Button.grid(row=0, column=2, sticky="ew")
-                    
+
                     self.button_state = 0  # only advance by one state when back button was not activated
-                    
+
                 else:  # 'error' occured
                     self.id_field.delete(0, END)
                     self.id_field.insert(0, error_type)
@@ -617,7 +618,7 @@ class Chat(Frame):
                 self.id_field.grid_remove()
                 self.id_field.config(state=NORMAL)
                 self.confirm_Button.grid_remove()
-                
+
                 if self.ButtonTask == 'group' or self.ButtonTask == 'private Chat':
                     self.ButtonTask = ""
                     self.privateChat_Button.grid(row=0, column=1, sticky="ew")
@@ -685,7 +686,7 @@ class Chat(Frame):
                     self.text_field.insert(0, "Sorry, given path does not exist, please try again!")
             else:  # normal message recognized
                 self.save(message + "#split:#msg", chat_id)
-        else: 
+        else:
             self.text_field.delete(0, 'end')
 
     def save(self, message, chatID):
@@ -768,7 +769,7 @@ class Chat(Frame):
             assembled_content = assembled_content + parts[i]
 
         return assembled_content
-        
+
 
     def open_file1(self):
         global switch
@@ -776,7 +777,7 @@ class Chat(Frame):
             selection = self.listBox1.curselection()[0]  # this gives an int value: first element = 0
         except IndexError:
             return
-            
+
         if selection or selection == 0:
 
             item = self.listBox1.get(selection)
@@ -797,7 +798,7 @@ class Chat(Frame):
                     index -= 1
                     part_as_string = messages[index][0].split("#split:#")
                     if len(part_as_string) == 4 and part_as_string[0] == sender_of_file:
-                        content_of_file.append(part_as_string[1]) 
+                        content_of_file.append(part_as_string[1])
                         counter -= 1
 
                 type_of_file = ""
@@ -817,7 +818,7 @@ class Chat(Frame):
             selection = self.listBox2.curselection()[0]  # this gives an int value: first element = 0
         except IndexError:
             return
-            
+
         if selection or selection == 0:
 
             item = self.listBox2.get(selection)
@@ -838,7 +839,7 @@ class Chat(Frame):
                     index -= 1
                     part_as_string = messages[index][0].split("#split:#")
                     if len(part_as_string) == 4 and part_as_string[0] == sender_of_file:
-                        content_of_file.append(part_as_string[1]) 
+                        content_of_file.append(part_as_string[1])
                         counter -= 1
 
                 type_of_file = ""
