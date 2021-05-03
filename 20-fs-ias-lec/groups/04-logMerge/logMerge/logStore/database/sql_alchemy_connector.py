@@ -1,7 +1,8 @@
 from sqlalchemy import create_engine
 from ..funcs.constants import CBORTABLE, EVENTTABLE, KOTLINTABLE, MASTERTABLE
 from ..funcs.log import create_logger
-from sqlalchemy import Table, Column, Integer, String, MetaData, Binary, func, Boolean
+from sqlalchemy import Table, Column, Integer, String, MetaData, func, Boolean
+from sqlalchemy.types import BINARY as Binary
 from sqlalchemy.orm import sessionmaker, mapper
 from contextlib import contextmanager
 
