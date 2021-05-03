@@ -3,7 +3,9 @@ import os
 sys.path.append(os.path.abspath('../../04-logMerge/eventCreationTool'))
 sys.path.append(os.path.abspath('../../07-logStore/src'))
 
-import EventCreationTool
+# import EventCreationTool
+from logStore.funcs.EventCreationTool import EventCreationTool
+from logStore.funcs.EventCreationTool import EventFactory
 from logStore.appconn.feed_ctrl_connection import FeedCtrlConnection
 from eventCreationWrapper import EventCreationWrapper
 
@@ -16,10 +18,10 @@ class UiFunctionHandler:
         # try catch or if None??
         lastEvent = self._fcc.get_my_last_event()
         if lastEvent is not None:
-            self._ecf = EventCreationTool.EventFactory(lastEvent)
+            self._ecf = EventFactory(lastEvent)
             self._eventCreationWrapper = EventCreationWrapper(self._ecf)
         else:
-            self._ecf = EventCreationTool.EventFactory()
+            self._ecf = EventFactory()
             self._eventCreationWrapper = EventCreationWrapper(self._ecf)
             _firstEvent = self._eventCreationWrapper.create_MASTER()
             _secondEvent = self._eventCreationWrapper.create_radius(1)
