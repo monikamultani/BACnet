@@ -1020,7 +1020,7 @@ root = Tk()
 logo_path = os.path.join(dirname, 'subChat/BAC_net_Logo.png')
 name_path = os.path.join(dirname, 'subChat/BAC_net.png')
 img = PhotoImage(file=logo_path)
-# root.iconphoto(False, img)
+root.iconphoto(True, img)
 
 # Testing
 probe = 'no_key'  # by default, there is no key and no name set
