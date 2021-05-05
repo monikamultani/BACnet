@@ -63,8 +63,6 @@ from subChat import TextWrapper
 
 import sketch
 
-# from sketch import window
-
 # Load Fonts
 # Helvetica Neue:
 pyglet.font.add_file(

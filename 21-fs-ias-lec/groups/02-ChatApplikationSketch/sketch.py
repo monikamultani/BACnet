@@ -22,7 +22,7 @@ def eraseLine():
 def getColor():
   global color
   hex = colorchooser.askcolor(title="Edit colors")
-  color = hex[1]  # hexadecimal
+  color = hex[1]
   return color
 
 
@@ -79,7 +79,6 @@ def showPalette():
   canvas.tag_bind(whiteRectangle, '<Button-1>', lambda x: showColor('white'))
 
 
-# window = Tk()
 def sketchWindow():
   global canvas, var, eraserImage, bucketImage
   window = Toplevel()
@@ -125,5 +124,3 @@ def sketchWindow():
   fill.place(x=10, y=470)
 
   showPalette()
-
-# window.mainloop()
