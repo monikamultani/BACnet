@@ -5,7 +5,7 @@ except ImportError:
 
 # -------------
 # WHAT YOU NEED TO DO:
-#    we haven't implemented an automatic installation of the following 
+#    we haven't implemented an automatic installation of the following
 #    libraries yet so you'll need to install them manually.
 #    Here are the commands for Linux:
 
@@ -47,9 +47,8 @@ dirname = os.path.abspath(os.path.dirname(__file__))
 # Import from gruppe04
 folderG4 = os.path.join(dirname, '../../04-logMerge/eventCreationTool')
 sys.path.append(folderG4)
+import EventCreationTool
 
-from logStore.funcs.EventCreationTool import EventCreationTool
-from logStore.funcs.EventCreationTool import EventFactory
 # import gruppe07 interface
 folderG7 = os.path.join(dirname, '../../07-14-logCtrl/src')
 sys.path.append(folderG7)
@@ -62,14 +61,18 @@ from logStore.appconn.chat_connection import ChatFunction
 from subChat import Colorize
 from subChat import TextWrapper
 
+import sketch
+
+# from sketch import window
+
 # Load Fonts
 # Helvetica Neue:
 pyglet.font.add_file(
-  os.path.join(dirname, 'subChat/font/helveticaneue/HelveticaNeue.ttf'))
+    os.path.join(dirname, 'subChat/font/helveticaneue/HelveticaNeue.ttf'))
 pyglet.font.add_file(
-  os.path.join(dirname, 'subChat/font/helveticaneue/HelveticaNeueBd.ttf'))
+    os.path.join(dirname, 'subChat/font/helveticaneue/HelveticaNeueBd.ttf'))
 pyglet.font.add_file(
-  os.path.join(dirname, 'subChat/font/helveticaneue/HelveticaNeueIt.ttf'))
+    os.path.join(dirname, 'subChat/font/helveticaneue/HelveticaNeueIt.ttf'))
 
 # Set global variables
 app = None  # currently active app
@@ -217,7 +220,7 @@ class DisplayFile(Frame):
     # Display an image
     if self.file_type == 'img':
       filename = str(
-        self.file_name + '.' + self.file_ending)  # + "[" + str(datetime.datetime.now())+'].' + self.file_ending)
+          self.file_name + '.' + self.file_ending)  # + "[" + str(datetime.datetime.now())+'].' + self.file_ending)
       file_path = os.path.join(image_folder, filename)
       with open(file_path, 'wb') as f:
         f.write(decoded_string)
@@ -232,7 +235,7 @@ class DisplayFile(Frame):
     # Display a pdf
     elif self.file_type == 'pdf':
       filename = str(self.file_name + "[" + str(
-        datetime.datetime.now()) + '].' + self.file_ending)
+          datetime.datetime.now()) + '].' + self.file_ending)
       file_path = os.path.join(pdf_folder, filename)
       with open(file_path, 'wb') as f:
         f.write(decoded_string)
@@ -263,9 +266,8 @@ class Chat(Frame):
     x = self.chat_function.get_current_event(
         self.chat_function.get_all_feed_ids()[1])
     most_recent_event = self.chat_function.get_current_event(self.feed_id)
-    # self.ecf = EventCreationTool.EventFactory(
-    #   most_recent_event)  # damit wieder gleiche Id benutzt wird
-    self.ecf=EventFactory(most_recent_event)
+    self.ecf = EventCreationTool.EventFactory(
+        most_recent_event)  # damit wieder gleiche Id benutzt wird
 
     # set self.personList:
     try:  # Try to load the Variable: if it works, we know we can load it and assign it
@@ -277,7 +279,7 @@ class Chat(Frame):
       pickle.dump(List,
                   open(pickle_file_names[0], "wb"))  # create an empty object
       self.person_list = pickle.load(
-        open(pickle_file_names[0], "rb"))  # loading and setting it now
+          open(pickle_file_names[0], "rb"))  # loading and setting it now
 
     # Configure Application layout
     self.master.configure(height=24, width=50)
@@ -328,6 +330,7 @@ class Chat(Frame):
     self.listBox2.grid(row=1, column=1, sticky="nsew")
     self.text_field.grid(row=2, column=0, columnspan=3, sticky="ew")
     self.send_button.grid(row=3, column=0, columnspan=3, sticky="ew")
+    self.sketch_button.grid(row=2, column=0, columnspan=3, sticky="ew")
     self.update_button.grid(row=4, column=0, columnspan=3, sticky="ew")
     self.tabTopBar.grid(row=0, column=0, columnspan=3, sticky="nsew")
     self.create_Button.grid(row=0, column=1, sticky="ew")
@@ -377,44 +380,48 @@ class Chat(Frame):
                          lambda event: self.clear_on_entry("text_field"))
     self.send_button = Button(self.bottomFrameChat, text='Send',
                               command=lambda: self.check_and_save(
-                                self.msg.get(), self.partner[1]), bg="#25D366",
+                                  self.msg.get(), self.partner[1]),
+                              bg="#25D366",
                               activebackground="#21B858",
                               font=('HelveticaNeue', 10))
-
-
+    self.sketch_button = Button(self.bottomFrameChat, text='Sketch',
+                                command=lambda: sketch.sketchWindow(),
+                                bg="#25D366", activebackground="#21B858",
+                                font=('HelveticaNeue', 10))
     self.update_button = Button(self.bottomFrameChat, text='Update',
                                 command=lambda: self.loadChat(self.partner),
                                 bg="white", font=('HelveticaNeue', 10))
     self.create_Button = Button(self.tabTopBar, text="   create   ",
                                 command=lambda: self.saveTypeAndSwitchState(
-                                  "create"), bg="#25D366",
+                                    "create"), bg="#25D366",
                                 activebackground="#21B858",
                                 font=('HelveticaNeue', 11))  # green
     self.join_Button = Button(self.tabTopBar,
                               text="           join             ",
                               command=lambda: self.saveTypeAndSwitchState(
-                                "join"), bg="#34B7F1",
+                                  "join"), bg="#34B7F1",
                               activebackground="#0f9bd7",
                               font=('HelveticaNeue', 11))  # blue
     self.privateChat_Button = Button(self.tabTopBar, text="Private Chat",
                                      command=lambda: self.saveTypeAndSwitchState(
-                                       "private Chat"), bg="#25D366",
+                                         "private Chat"), bg="#25D366",
                                      activebackground="#21B858",
                                      font=('HelveticaNeue', 11))  # lightgreen
     self.group_Button = Button(self.tabTopBar, text="    Group    ",
                                command=lambda: self.saveTypeAndSwitchState(
-                                 "group"), bg="#34B7F1",
+                                   "group"), bg="#34B7F1",
                                activebackground="#0f9bd7",
                                font=('HelveticaNeue', 11))  # lightblue
 
     self.confirm_Button = Button(self.tabTopBar, text="OK",
                                  command=lambda: self.saveTypeAndSwitchState(
-                                   "confirm"), bg="#25D366",
+                                     "confirm"), bg="#25D366",
                                  activebackground="#21B858",
                                  font=('HelveticaNeue', 11))  # green
     self.back_Button = Button(self.tabTopBar, text="back",
                               command=lambda: self.saveTypeAndSwitchState(
-                                "back"), bg="white", font=('HelveticaNeue', 11),
+                                  "back"), bg="white",
+                              font=('HelveticaNeue', 11),
                               highlightcolor="white")  # green
     self.button_state = 0
     self.ButtonType = ""
@@ -459,7 +466,7 @@ class Chat(Frame):
 
     for i in range(1, len(chat)):
       chat_message = chat[i][0].split(
-        "#split:#")  # a chat-message is like: username#split:#message, so we need to split this two
+          "#split:#")  # a chat-message is like: username#split:#message, so we need to split this two
       partner_username = chat_message[0]  # from who is the message
       message = chat_message[1]  # the real content / message
       additional_msg = chat_message[2]
@@ -473,7 +480,7 @@ class Chat(Frame):
                 0] = partner_username  # the creator of the group gets the name of his partner for the first time
               self.partner[0] = partner_username
               self.username_label.config(
-                text=TextWrapper.shorten_name(self.partner[0], 34))
+                  text=TextWrapper.shorten_name(self.partner[0], 34))
 
       else:  # length of message == 3
         if partner_username != self.username:  # message from the partner(s)
@@ -483,7 +490,7 @@ class Chat(Frame):
             try:
               self.listBox1.itemconfig('end', bg='white',
                                        foreground=Colorize.name_to_color(
-                                         partner_username))
+                                           partner_username))
             except:
               self.listBox1.itemconfig('end', bg='white', foreground='#00a86b')
             self.listBox2.insert('end', "")
@@ -504,7 +511,7 @@ class Chat(Frame):
               self.listBox2.insert('end', '')
 
           self.listBox1.insert('end', "{:<22}{:>16}".format("", time.strftime(
-            "%H:%M %d.%m.%Y", time.gmtime(chat[i][1] + timezone))))
+              "%H:%M %d.%m.%Y", time.gmtime(chat[i][1] + timezone))))
           self.listBox1.itemconfig('end', bg='white', foreground="lightgrey")
           self.listBox2.insert('end', "")
 
@@ -531,7 +538,7 @@ class Chat(Frame):
               self.listBox1.insert('end', '')
 
           self.listBox2.insert('end', "{:<22}{:>16}".format("", time.strftime(
-            "%H:%M %d.%m.%Y", time.gmtime(chat[i][1] + timezone))))
+              "%H:%M %d.%m.%Y", time.gmtime(chat[i][1] + timezone))))
           self.listBox2.itemconfig('end', bg='#dafac9', foreground="lightgrey")
           self.listBox1.insert('end', '')
 
@@ -566,23 +573,23 @@ class Chat(Frame):
         self.person_list[i][2] = time.time()
 
     chat_type = \
-    self.chat_function.get_full_chat(self.partner[1])[0][0].split("#split:#")[
-      3]  # get the type of the chat (private or group)
+      self.chat_function.get_full_chat(self.partner[1])[0][0].split("#split:#")[
+        3]  # get the type of the chat (private or group)
 
     if chat_type == "private":
       self.username_label.config(
-        text=TextWrapper.shorten_name(self.partner[0], 34))
+          text=TextWrapper.shorten_name(self.partner[0], 34))
     else:  # chat_type == "group"
       self.username_label.config(
-        text=TextWrapper.shorten_name(self.partner[0], 27) + " (" +
-             self.partner[1] + ")")
+          text=TextWrapper.shorten_name(self.partner[0], 27) + " (" +
+               self.partner[1] + ")")
 
     self.updateContent(self.partner[1])
 
   def check_for_new_messages(self, person_nr):
     length = len(
-      self.chat_function.get_chat_since(self.person_list[person_nr][2],
-                                        self.person_list[person_nr][1]))
+        self.chat_function.get_chat_since(self.person_list[person_nr][2],
+                                          self.person_list[person_nr][1]))
     unread_messages = length - self.count_users_in_chat(
         self.person_list[person_nr][1], self.person_list[person_nr][2])
     return unread_messages
@@ -591,8 +598,8 @@ class Chat(Frame):
     if len(self.person_list) != 0:
       self.listBox3.delete(0, 'end')
       self.person_list.sort(
-        key=lambda x: self.chat_function.get_full_chat(x[1])[-1][1],
-        reverse=True)
+          key=lambda x: self.chat_function.get_full_chat(x[1])[-1][1],
+          reverse=True)
 
       for i in range(len(self.person_list)):
         counter = self.check_for_new_messages(i)
@@ -777,11 +784,11 @@ class Chat(Frame):
               for i in range(partition_len):
                 if i == int(partition_len) - 1:  # We arrived at last part
                   self.save(
-                    file_string[i * kilobyte:] + "#split:#" + file_type + str(
-                      partition_len) + "_" + file_name, chat_id)
+                      file_string[i * kilobyte:] + "#split:#" + file_type + str(
+                          partition_len) + "_" + file_name, chat_id)
                 else:
                   self.save(file_string[i * kilobyte:(
-                                                           i + 1) * kilobyte] + "#split:#filepart#split:#filepart",
+                                                         i + 1) * kilobyte] + "#split:#filepart#split:#filepart",
                             chat_id)
 
             else:  # length <= 1000
@@ -810,7 +817,7 @@ class Chat(Frame):
 
     if self.partner[1] != "":
       self.loadChat(
-        self.partner)  # updating chat, so the send message is also added in the listbox
+          self.partner)  # updating chat, so the send message is also added in the listbox
     self.text_field.delete(0, 'end')
 
   def create_chat(self, ID, name=None):
@@ -832,8 +839,8 @@ class Chat(Frame):
     if self.is_joinable(ID):
       self.person_list.append([ID, ID, 0])
       partnerName = \
-      self.chat_function.get_full_chat(ID)[0][0].split("#split:#")[
-        1]  # taking the name of the partner for the frome the first message
+        self.chat_function.get_full_chat(ID)[0][0].split("#split:#")[
+          1]  # taking the name of the partner for the frome the first message
       self.person_list[-1][
         0] = partnerName  # index -1 is the index of the last list-element
       self.partner[0] = partnerName
@@ -979,7 +986,8 @@ class Chat(Frame):
   @staticmethod
   def generate_ID():  # generates a secure random id
     ID = list(''.join(random.SystemRandom().choice(
-      string.ascii_lowercase + string.ascii_uppercase + string.digits) for i in
+        string.ascii_lowercase + string.ascii_uppercase + string.digits) for i
+                      in
                       range(6)))
     for i in range(len(ID)):
       if ID[i] == 'I' or ID[
@@ -1012,7 +1020,7 @@ root = Tk()
 logo_path = os.path.join(dirname, 'subChat/BAC_net_Logo.png')
 name_path = os.path.join(dirname, 'subChat/BAC_net.png')
 img = PhotoImage(file=logo_path)
-root.iconphoto(True, img)
+# root.iconphoto(False, img)
 
 # Testing
 probe = 'no_key'  # by default, there is no key and no name set
@@ -1021,9 +1029,9 @@ try:  # Try to get the key (if it works, then  we can skip the login and go dire
   probe = 'key_loaded_but_list_not'  # if loading the name didn't throw an error probe is set to 'no_key'
   p = pickle.load(open(pickle_file_names[0], "rb"))  # try to load personList
   probe = 'list_and_name_loaded'  # if loading the personList didn't throw an error probe is set to 'list'
-except:  # we need to login first      
+except:  # we need to login first
   print(
-    "Key has NOT been found: You are redirected to 'Login' to create a User Profile first")
+      "Key has NOT been found: You are redirected to 'Login' to create a User Profile first")
   # test stays 'name' or ""
 
 # Check which case is true to prevent double loading of applications and to make sure everything is set up beforehad
@@ -1033,10 +1041,10 @@ elif probe == 'key_loaded_but_list_not':  # if the key could be loaded but the l
   List = list()
   pickle.dump(List, open(pickle_file_names[0], "wb"))  # create an empty object
   app = Chat(
-    master=root)  # If there is already an exiting key, we can just login
+      master=root)  # If there is already an exiting key, we can just login
 elif probe == 'list_and_name_loaded':  # when everythingg is already set up, we can just start the Chat window
   app = Chat(
-    master=root)  # If there is already an exiting key, we can just login
+      master=root)  # If there is already an exiting key, we can just login
 
 # Main Loop:
 try:
@@ -1052,5 +1060,3 @@ pickle.dump(app.person_list,
             open(pickle_file_names[0], "wb"))  # create an empty object
 print("\"personList\" has been saved to \"" + pickle_file_names[
   0] + "\": personList = ", app.person_list)
-
-
