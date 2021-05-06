@@ -1,9 +1,21 @@
 from tkinter import *
 from tkinter import colorchooser
+from PIL import Image
 
 x, y = 0, 0  # coordinates
 color = 'black'
 bgColor = 'white'
+
+
+def createCanvas():
+  # TODO: fix background color for new canvas
+  canvas.delete('all')
+  showPalette()
+
+
+def deleteCanvas(event):
+  canvas.delete('all')
+  showPalette()
 
 
 def draw(event):
@@ -26,28 +38,45 @@ def getColor():
   return color
 
 
-def showColor(newColor):
-  global color
-  color = newColor
-
-
 def getScaleValue():
   brushSize = str(var.get())
   return brushSize
 
 
-def deleteCanvas(event):
-  canvas.delete('all')
+def hidePalette():
+  global canvas, blackRectangle, grayRectangle, brownRectangle, redRectangle, orangeRectangle, yellowRectangle, greenRectangle, blueRectangle, purpleRectangle, whiteRectangle
+  canvas.itemconfig(blackRectangle, state=HIDDEN)
+  canvas.itemconfig(grayRectangle, state=HIDDEN)
+  canvas.itemconfig(brownRectangle, state=HIDDEN)
+  canvas.itemconfig(redRectangle, state=HIDDEN)
+  canvas.itemconfig(orangeRectangle, state=HIDDEN)
+  canvas.itemconfig(yellowRectangle, state=HIDDEN)
+  canvas.itemconfig(greenRectangle, state=HIDDEN)
+  canvas.itemconfig(blueRectangle, state=HIDDEN)
+  canvas.itemconfig(purpleRectangle, state=HIDDEN)
+  canvas.itemconfig(whiteRectangle, state=HIDDEN)
+
+
+def saveImage():
+  hidePalette()
+  canvas.postscript(colormode='color', file="canvas.eps")
+  image = Image.open("canvas.eps")
+  image.save("canvas.png")
   showPalette()
 
 
-def createCanvas():
-  # TODO: fix background color for new canvas
-  canvas.delete('all')
-  showPalette()
+def sendImage():
+  # TODO: implement method
+  global haha
+
+
+def showColor(newColor):
+  global color
+  color = newColor
 
 
 def showPalette():
+  global blackRectangle, grayRectangle, brownRectangle, redRectangle, orangeRectangle, yellowRectangle, greenRectangle, blueRectangle, purpleRectangle, whiteRectangle
   blackRectangle = canvas.create_rectangle((10, 10, 30, 30), fill='black')
   canvas.tag_bind(blackRectangle, '<Button-1>', lambda x: showColor('black'))
 
@@ -94,6 +123,8 @@ def sketchWindow():
 
   menubar.add_cascade(label='File', menu=submenu)
   submenu.add_command(label='New Canvas', command=createCanvas)
+  submenu.add_command(label='Save Image', command=saveImage)
+  # submenu.add_command(label='Send Image', command=sendImage)
 
   canvas = Canvas(window, background=bgColor, width=700, height=600)
   canvas.grid(row=0, column=0, sticky='nsew')
@@ -105,9 +136,6 @@ def sketchWindow():
 
   paletteButton = Button(window, text="Edit colors", command=getColor)
   paletteButton.place(x=10, y=380)
-
-  sendButton = Button(window, text="Send image")
-  sendButton.place(x=620, y=10)
 
   canvas.bind('<B1-Motion>', draw)
   canvas.bind('<B3-Motion>', deleteCanvas)
