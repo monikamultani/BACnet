@@ -326,7 +326,7 @@ class Chat(Frame):
     self.username_label.grid(row=0, column=0, columnspan=3, sticky="ew")
     self.listBox1.grid(row=1, column=0, sticky="nsew")
     self.listBox2.grid(row=1, column=1, sticky="nsew")
-    self.text_field.grid(row=2, column=0, columnspan=3, sticky="ew")
+    self.text_field.grid(row=1, column=0, columnspan=3, sticky="ew")
     self.send_button.grid(row=3, column=0, columnspan=3, sticky="ew")
     self.sketch_button.grid(row=2, column=0, columnspan=3, sticky="ew")
     self.update_button.grid(row=4, column=0, columnspan=3, sticky="ew")
