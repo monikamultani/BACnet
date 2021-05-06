@@ -60,8 +60,8 @@ def hidePalette():
 def saveImage():
   hidePalette()
   canvas.postscript(colormode='color', file="canvas.eps")
-  image = Image.open("canvas.eps")
-  image.save("canvas.png")
+  image = Image.open("sketch.eps")
+  image.save("sketch.png")
   showPalette()
 
 
