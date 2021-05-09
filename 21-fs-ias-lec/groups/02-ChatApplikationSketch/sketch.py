@@ -122,8 +122,8 @@ def sketchWindow():
   submenu = Menu(menubar, tearoff=0)
 
   menubar.add_cascade(label='File', menu=submenu)
-  submenu.add_command(label='New Canvas', command=createCanvas)
-  submenu.add_command(label='Save Image', command=saveImage)
+  menubar.add_cascade(label='New Canvas', command=createCanvas)
+  menubar.add_cascade(label='Save Image', command=saveImage)
   # submenu.add_command(label='Send Image', command=sendImage)
 
   canvas = Canvas(window, background=bgColor, width=700, height=600)
