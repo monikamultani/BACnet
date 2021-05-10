@@ -65,9 +65,10 @@ def saveImage():
   showPalette()
 
 
-def sendImage():
-  # TODO: implement method
-  global haha
+# def sendImage():
+#   # TODO: implement method
+#   Chat.text_field.insert(0, "img: C:/Users/Li Ting Luong/BACnet/21-fs-ias-lec/groups/02-ChatApplikationSketch/sketch.png")
+#   Chat.send_button.invoke()
 
 
 def showColor(newColor):
@@ -121,10 +122,9 @@ def sketchWindow():
   window.config(menu=menubar)
   submenu = Menu(menubar, tearoff=0)
 
-  menubar.add_cascade(label='File', menu=submenu)
   menubar.add_cascade(label='New Canvas', command=createCanvas)
   menubar.add_cascade(label='Save Image', command=saveImage)
-  # submenu.add_command(label='Send Image', command=sendImage)
+  # menubar.add_cascade(label='Send Image', command=sendImage)
 
   canvas = Canvas(window, background=bgColor, width=700, height=600)
   canvas.grid(row=0, column=0, sticky='nsew')
