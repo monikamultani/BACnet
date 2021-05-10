@@ -145,8 +145,8 @@ def sketchWindow():
   eraser = Button(window, image=eraserImage, command=eraseLine)
   eraser.place(x=10, y=420)
 
-  photoBucket = PhotoImage(file=r"bucket.png")
-  bucketImage = photoBucket.subsample(30, 30)
+  photoBucket = PhotoImage(file=r"colorBucket.png")
+  bucketImage = photoBucket.subsample(7, 7)
   fill = Button(window, image=bucketImage,
                 command=lambda: canvas.configure(bg=color))
   fill.place(x=10, y=470)
