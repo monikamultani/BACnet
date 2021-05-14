@@ -28,7 +28,7 @@ def draw(event):
 
 def eraseLine():
   global color
-  color = "white"
+  color = bgColor
 
 
 def getColor():
