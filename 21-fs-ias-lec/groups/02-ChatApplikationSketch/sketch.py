@@ -19,10 +19,10 @@ def deleteCanvas(event):
 
 
 def draw(event):
+  # TODO: draw line consistently
   x, y = event.x, event.y
   x1, y1 = (x - 1), (y - 1)
-  x2, y2 = (x + 1), (y + 1)
-  canvas.create_rectangle(x1, y1, x2, y2, fill=color, outline=color,
+  canvas.create_rectangle(x1, y1, x, y, fill=color, outline=color,
                           width=getScaleValue())
 
 
@@ -66,8 +66,10 @@ def saveImage():
 
 
 # def sendImage():
-#   # TODO: implement method
-#   Chat.text_field.insert(0, "img: C:/Users/Li Ting Luong/BACnet/21-fs-ias-lec/groups/02-ChatApplikationSketch/sketch.png")
+#   from subjective_chat import Chat
+#   # TODO: implement sending image
+#   Chat.text_field.insert(0,
+#                          "img: C:/Users/Li Ting Luong/BACnet/21-fs-ias-lec/groups/02-ChatApplikationSketch/sketch.png")
 #   Chat.send_button.invoke()
 
 
@@ -120,7 +122,6 @@ def sketchWindow():
 
   menubar = Menu(window)
   window.config(menu=menubar)
-  submenu = Menu(menubar, tearoff=0)
 
   menubar.add_cascade(label='New Canvas', command=createCanvas)
   menubar.add_cascade(label='Save Image', command=saveImage)
