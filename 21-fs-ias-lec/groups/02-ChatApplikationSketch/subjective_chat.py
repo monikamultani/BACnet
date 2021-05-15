@@ -253,6 +253,7 @@ class Sketch():
     x, y = 0, 0  # coordinates
     color = 'black'
     bgColor = 'white'
+
     window = Toplevel()
     window.title("Sketch")
     window.rowconfigure(0, weight=1)
@@ -345,14 +346,15 @@ class Sketch():
     Sketch.hidePalette(self)
     canvas.postscript(colormode='color', file="sketch.eps")
     image = Image.open("sketch.eps")
-    image.save("sketch.png")
+    image.save("Images/sketch.png")
     Sketch.showPalette(self)
 
   def sendImage(self):
+    sketchImagePath = os.path.join(dirname, 'Images/sketch.png')
     Sketch.saveImage(self)
     text_field = Chat.getTextField(self)
     text_field.insert(0,
-                      "img: C:/Users/Li Ting Luong/BACnet/21-fs-ias-lec/groups/02-ChatApplikationSketch/sketch.png")
+                      "img: " + sketchImagePath)
     send_button = Chat.getSendButton(self)
     send_button.invoke()
 
