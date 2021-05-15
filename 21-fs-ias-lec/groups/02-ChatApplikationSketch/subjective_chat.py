@@ -1,3 +1,5 @@
+from tkinter import colorchooser
+
 try:
   from Tkinter import *
 except ImportError:
@@ -37,6 +39,7 @@ import time
 import datetime
 from nacl.signing import SigningKey
 from nacl.encoding import HexEncoder
+from PIL import Image
 
 # determine platform
 system = platform.system()  # currently only supports Linux (works on other platforms but the look and feel is not the same)
@@ -240,6 +243,164 @@ class DisplayFile(Frame):
       webbrowser.open(file_path)
 
 
+class Sketch():
+
+  def __init__(self):
+    self.createSketchWindow()
+
+  def createSketchWindow(self):
+    global canvas, bgColor, color, eraserImage, bucketImage, var
+    x, y = 0, 0  # coordinates
+    color = 'black'
+    bgColor = 'white'
+    window = Toplevel()
+    window.title("Sketch")
+    window.rowconfigure(0, weight=1)
+    window.columnconfigure(0, weight=1)
+
+    menubar = Menu(window)
+    window.config(menu=menubar)
+
+    menubar.add_cascade(label='New Canvas',
+                        command=lambda: Sketch.createCanvas(self))
+    menubar.add_cascade(label='Save Image',
+                        command=lambda: Sketch.saveImage(self))
+    # menubar.add_cascade(label='Send Image', command=Sketch.sendImage)
+
+    canvas = Canvas(window, background=bgColor, width=700,
+                    height=600)
+    canvas.grid(row=0, column=0, sticky='nsew')
+
+    var = IntVar()
+    scale = Scale(window, from_=0, to=50, orient=HORIZONTAL,
+                  variable=var)
+    scale.place(x=10, y=320)
+    scale.set(10)
+
+    paletteButton = Button(window, text="Edit colors",
+                           command=lambda: Sketch.getColor(self))
+    paletteButton.place(x=10, y=380)
+
+    canvas.bind('<B1-Motion>', lambda x: Sketch.draw(self, x))
+
+    photoEraser = PhotoImage(file=r"eraser.png")
+    eraserImage = photoEraser.subsample(7, 7)
+    eraser = Button(window, image=eraserImage,
+                    command=lambda: Sketch.eraseLine(self))
+    eraser.place(x=10, y=420)
+
+    photoBucket = PhotoImage(file=r"colorBucket.png")
+    bucketImage = photoBucket.subsample(7, 7)
+    fill = Button(window, image=bucketImage,
+                  command=lambda: canvas.configure(bg=color))
+    fill.place(x=10, y=470)
+    Sketch.showPalette(self)
+
+  def createCanvas(self):
+    global canvas
+    canvas.delete('all')
+    canvas.configure(bg='white')
+    Sketch.showPalette(self)
+
+  def draw(self, event):
+    # TODO: draw line consistently
+    x, y = event.x, event.y
+    x1, y1 = (x - 1), (y - 1)
+    canvas.create_rectangle(x1, y1, x, y, fill=color, outline=color,
+                            width=Sketch.getScaleValue(self))
+
+  def eraseLine(self):
+    # TODO: at beginning erase with white
+    global bgColor, color
+    # color=bgColor
+    color = 'white'
+
+  def getColor(self):
+    global color
+    hex = colorchooser.askcolor(title="Edit colors")
+    color = hex[1]
+    return color
+
+  def getScaleValue(self):
+    global var
+    brushSize = str(var.get())
+    return brushSize
+
+  def hidePalette(self):
+    global blackRectangle, grayRectangle, brownRectangle, redRectangle, orangeRectangle, yellowRectangle, greenRectangle, blueRectangle, purpleRectangle, whiteRectangle, canvas
+    canvas.itemconfig(blackRectangle, state=HIDDEN)
+    canvas.itemconfig(grayRectangle, state=HIDDEN)
+    canvas.itemconfig(brownRectangle, state=HIDDEN)
+    canvas.itemconfig(redRectangle, state=HIDDEN)
+    canvas.itemconfig(orangeRectangle, state=HIDDEN)
+    canvas.itemconfig(yellowRectangle, state=HIDDEN)
+    canvas.itemconfig(greenRectangle, state=HIDDEN)
+    canvas.itemconfig(blueRectangle, state=HIDDEN)
+    canvas.itemconfig(purpleRectangle, state=HIDDEN)
+    canvas.itemconfig(whiteRectangle, state=HIDDEN)
+
+  def saveImage(self):
+    # TODO: hide palette when saving
+    global canvas
+    Sketch.hidePalette(self)
+    canvas.postscript(colormode='color', file="sketch.eps")
+    image = Image.open("sketch.eps")
+    image.save("sketch.png")
+    Sketch.showPalette(self)
+
+  # def sendImage(self):
+  #   # TODO: implement sending image
+  #   Chat.text_field.insert(0,
+  #                          "img: C:/Users/Li Ting Luong/BACnet/21-fs-ias-lec/groups/02-ChatApplikationSketch/sketch.png")
+  #   Chat.send_button.invoke()
+
+  def showColor(newColor):
+    global color
+    color = newColor
+
+  def showPalette(self):
+    global blackRectangle, grayRectangle, brownRectangle, redRectangle, orangeRectangle, yellowRectangle, greenRectangle, blueRectangle, purpleRectangle, whiteRectangle
+    blackRectangle = canvas.create_rectangle((10, 10, 30, 30), fill='black')
+    canvas.tag_bind(blackRectangle, '<Button-1>',
+                    lambda x: Sketch.showColor('black'))
+
+    grayRectangle = canvas.create_rectangle((10, 40, 30, 60), fill='gray')
+    canvas.tag_bind(grayRectangle, '<Button-1>',
+                    lambda x: Sketch.showColor('gray'))
+
+    brownRectangle = canvas.create_rectangle((10, 70, 30, 90), fill='brown4')
+    canvas.tag_bind(brownRectangle, '<Button-1>',
+                    lambda x: Sketch.showColor('brown4'))
+
+    redRectangle = canvas.create_rectangle((10, 100, 30, 120), fill='red')
+    canvas.tag_bind(redRectangle, '<Button-1>',
+                    lambda x: Sketch.showColor('red'))
+
+    orangeRectangle = canvas.create_rectangle((10, 130, 30, 150), fill='orange')
+    canvas.tag_bind(orangeRectangle, '<Button-1>',
+                    lambda x: Sketch.showColor('orange'))
+
+    yellowRectangle = canvas.create_rectangle((10, 160, 30, 180), fill='yellow')
+    canvas.tag_bind(yellowRectangle, '<Button-1>',
+                    lambda x: Sketch.showColor('yellow'))
+
+    greenRectangle = canvas.create_rectangle((10, 190, 30, 210), fill='green')
+    canvas.tag_bind(greenRectangle, '<Button-1>',
+                    lambda x: Sketch.showColor('green'))
+
+    blueRectangle = canvas.create_rectangle((10, 220, 30, 240), fill='blue')
+    canvas.tag_bind(blueRectangle, '<Button-1>',
+                    lambda x: Sketch.showColor('blue'))
+
+    purpleRectangle = canvas.create_rectangle((10, 250, 30, 270), fill='purple')
+    canvas.tag_bind(purpleRectangle, '<Button-1>',
+                    lambda x: Sketch.showColor('purple'))
+
+    whiteRectangle = canvas.create_rectangle((10, 280, 30, 300), fill='white')
+    canvas.tag_bind(whiteRectangle, '<Button-1>',
+                    lambda x: Sketch.showColor('white'))
+
+
 class Chat(Frame):
 
   def __init__(self, master=None):
@@ -352,6 +513,8 @@ class Chat(Frame):
                             yscrollcommand=self.scroll1)
     self.listBox1.configure(bg='#e3dbd4', font=('HelveticaNeue', 10))
     self.listBox1.bind("<<ListboxSelect>>", lambda x: self.open_file1())
+    self.listBox1.bind("<<ListboxSelect>>",
+                       lambda x: self.replyMessage(self.partner[1]))
 
     self.listBox2 = Listbox(self.middleFrameChat, height=30, width=25,
                             yscrollcommand=self.scroll2)
@@ -383,7 +546,7 @@ class Chat(Frame):
                               activebackground="#21B858",
                               font=('HelveticaNeue', 10))
     self.sketch_button = Button(self.bottomFrameChat, text='Sketch',
-                                command=lambda: sketch.sketchWindow(),
+                                command=lambda: Sketch.createSketchWindow(self),
                                 bg="#25D366", activebackground="#21B858",
                                 font=('HelveticaNeue', 10))
     self.update_button = Button(self.bottomFrameChat, text='Update',
@@ -544,6 +707,17 @@ class Chat(Frame):
           self.listBox1.yview(END)
           self.listBox2.insert('end', '')  # some space to enhance appeal
           self.listBox1.insert('end', '')
+
+  # def replyMessage(self, chatID):
+  #   chat = self.chat_function.get_full_chat(chatID)
+  #   for i in range(1, len(chat)):
+  #     chat_message = chat[i][0].split(
+  #         "#split:#")  # a chat-message is like: username#split:#message, so we need to split this two
+  #     partner_username = chat_message[0]  # from who is the message
+  #   index = self.listBox1.curselection()
+  #   message = self.listBox1.get(index[0])
+  #   self.text_field.insert(0, partner_username + "\n: " + message)
+  #   self.send_button.invoke()
 
   def updateContent(self, chatID):
     self.add(chatID)
