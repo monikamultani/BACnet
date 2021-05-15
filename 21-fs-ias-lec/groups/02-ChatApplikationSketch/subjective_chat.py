@@ -265,7 +265,8 @@ class Sketch():
                         command=lambda: Sketch.createCanvas(self))
     menubar.add_cascade(label='Save Image',
                         command=lambda: Sketch.saveImage(self))
-    # menubar.add_cascade(label='Send Image', command=Sketch.sendImage)
+    menubar.add_cascade(label='Send Image',
+                        command=lambda: Sketch.sendImage(self))
 
     canvas = Canvas(window, background=bgColor, width=700,
                     height=600)
@@ -340,7 +341,6 @@ class Sketch():
     canvas.itemconfig(whiteRectangle, state=HIDDEN)
 
   def saveImage(self):
-    # TODO: hide palette when saving
     global canvas
     Sketch.hidePalette(self)
     canvas.postscript(colormode='color', file="sketch.eps")
@@ -348,11 +348,13 @@ class Sketch():
     image.save("sketch.png")
     Sketch.showPalette(self)
 
-  # def sendImage(self):
-  #   # TODO: implement sending image
-  #   Chat.text_field.insert(0,
-  #                          "img: C:/Users/Li Ting Luong/BACnet/21-fs-ias-lec/groups/02-ChatApplikationSketch/sketch.png")
-  #   Chat.send_button.invoke()
+  def sendImage(self):
+    Sketch.saveImage(self)
+    text_field = Chat.getTextField(self)
+    text_field.insert(0,
+                      "img: C:/Users/Li Ting Luong/BACnet/21-fs-ias-lec/groups/02-ChatApplikationSketch/sketch.png")
+    send_button = Chat.getSendButton(self)
+    send_button.invoke()
 
   def showColor(newColor):
     global color
@@ -1182,6 +1184,12 @@ class Chat(Frame):
     switch[2] = type_of_file
     root2 = Toplevel()
     app2 = DisplayFile(root2)
+
+  def getTextField(self):
+    return self.text_field
+
+  def getSendButton(self):
+    return self.send_button
 
   # -------------- -------------- --------------
 
