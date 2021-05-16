@@ -256,6 +256,7 @@ class Sketch():
 
     window = Toplevel()
     window.title("Sketch")
+    window.maxsize(700, 600)
     window.rowconfigure(0, weight=1)
     window.columnconfigure(0, weight=1)
 
@@ -294,8 +295,10 @@ class Sketch():
     photoBucket = PhotoImage(file=r"colorBucket.png")
     bucketImage = photoBucket.subsample(7, 7)
     fill = Button(window, image=bucketImage,
-                  command=lambda: canvas.configure(bg=color))
+                  command=lambda: Sketch.fillCanvas(self))
     fill.place(x=10, y=470)
+
+    canvas.create_rectangle(0, 0, 700, 600, fill=bgColor)
     Sketch.showPalette(self)
 
   def createCanvas(self):
@@ -316,6 +319,12 @@ class Sketch():
     global bgColor, color
     # color=bgColor
     color = 'white'
+
+  def fillCanvas(self):
+    global bgColor
+    bgColor = color
+    canvas.create_rectangle(0, 0, 700, 600, fill=bgColor)
+    Sketch.showPalette(self)
 
   def getColor(self):
     global color
