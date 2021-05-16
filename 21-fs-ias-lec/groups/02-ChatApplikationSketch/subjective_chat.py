@@ -317,8 +317,7 @@ class Sketch():
   def eraseLine(self):
     # TODO: at beginning erase with white
     global bgColor, color
-    # color=bgColor
-    color = 'white'
+    color = bgColor
 
   def fillCanvas(self):
     global bgColor
