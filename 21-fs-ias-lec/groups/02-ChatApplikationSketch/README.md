@@ -2,15 +2,11 @@
 Author: Li Ting Luong, Monika Multani
 
 ## Extend Chat
-Our group is working at the existing chat. We extended the chat with a sketch application. We still need to debug the application. 
-In addition we started to extend the chat with forwarding message.
+Our group is working with the existing subjective chat provided from the group 03-subChat. We extended the chat with a sketch application.
 
-### Sketch Application
-We added a "Sketch" - button. By pressing the button a new window opens. Here it is possible to create a sketch. There is a color palette to change the color of the pen and a scale bar to resize the pen. The background color can be changed by clicking on the color and then on the bucket. 
+## Sketch Application
+We added a "Sketch" button. By pressing the button a new window opens where it is now possible to create a sketch. There is a color palette to change the color of the pen and a scale bar to resize the pen. The background color can be changed by clicking on the color and then on the bucket. 
 A part or all of the content can be removed with the help of the eraser.
-
-### Forwarding Message
-We would also like to add the ability to forward message including reference to the original author. 
 
 ## Tools
 The code is written in python. We used the inbuilt python module Tkinter which is used to create GUI applications.

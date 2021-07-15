@@ -42,7 +42,6 @@ def deleteCanvas(event):
 
 
 def createCanvas():
-  # TODO: fix background color for new canvas
   canvas.delete('all')
   showPalette()
 
@@ -103,8 +102,9 @@ def showPalette():
   redRectangle = canvas.create_rectangle((10, 100, 30, 120), fill='red')
   canvas.tag_bind(redRectangle, '<Button-1>', lambda x: showColor('red'))
 
-  orangeRectangle = canvas.create_rectangle((10, 130, 30, 150), fill='orange')
-  canvas.tag_bind(orangeRectangle, '<Button-1>', lambda x: showColor('orange'))
+  orangeRectangle = canvas.create_recButtangle((10, 130, 30, 150),
+                                               fill='orange')
+  canvas.tag_bind(orangeRectangle, '<ton-1>', lambda x: showColor('orange'))
 
   yellowRectangle = canvas.create_rectangle((10, 160, 30, 180), fill='yellow')
   canvas.tag_bind(yellowRectangle, '<Button-1>', lambda x: showColor('yellow'))

@@ -65,8 +65,6 @@ from logStore.appconn.chat_connection import ChatFunction
 from subChat import Colorize
 from subChat import TextWrapper
 
-import sketch
-
 # Load Fonts
 # Helvetica Neue:
 pyglet.font.add_file(
@@ -243,19 +241,20 @@ class DisplayFile(Frame):
         f.write(decoded_string)
       webbrowser.open(file_path)
 
-
+# sketch application
 class Sketch():
 
   def __init__(self):
     self.createSketchWindow()
 
+  # creates sketch window with white background and black pen color
   def createSketchWindow(self):
     global canvas, bgColor, color, eraserImage, bucketImage, var, window, x1, y1
-    x, y = 0, 0  # coordinates
-    color = 'black'
-    bgColor = 'white'
-    x1 = None
-    y1 = None
+    x, y = 0, 0  # coordinates of pen
+    color = 'black'  # pen color
+    bgColor = 'white'  # background color
+    x1 = None  # old x coordinate of pen
+    y1 = None  # old y coordinate of pen
 
     window = Toplevel()
     window.title("Sketch")
@@ -264,15 +263,16 @@ class Sketch():
     window.rowconfigure(0, weight=1)
     window.columnconfigure(0, weight=1)
 
+    # create drawing panel
     canvas = Canvas(window, background=bgColor, width=700,
                     height=600)
     canvas.place(x=10, y=140)
 
+    # create frame for tools
     tools_frame = Frame(window, bd=5, relief=RIDGE, bg="white")
     tools_frame.place(x=10, y=10, width=700, height=125)
-
-    Sketch.showPalette(tools_frame)
-
+    Sketch.showPalette(tools_frame)  # displays color buttons
+    # define sketch function buttons
     resetCanvasButton = Button(tools_frame, width=15, height=1,
                                text="Reset Canvas",
                                command=lambda: Sketch.createCanvas(self))
@@ -289,6 +289,7 @@ class Sketch():
                         command=lambda: Sketch.sendImage(self))
     sendButton.place(x=570, y=84)
 
+    # define scale for changing pen and eraser size
     var = IntVar()
     scale = Scale(tools_frame, from_=0, to=50, orient=HORIZONTAL, variable=var,
                   length=385)
@@ -298,12 +299,19 @@ class Sketch():
     canvas.bind('<B1-Motion>', lambda x: Sketch.draw(self, x))
     canvas.bind('<ButtonRelease-1>', lambda x: Sketch.reset(self, x))
 
+    # define color picker
+    paletteButton = Button(tools_frame, text="More colors", width=12, height=2,
+                           command=lambda: Sketch.getColor(self))
+    paletteButton.place(x=395, y=65)
+
+    # define eraser button
     photoEraser = PhotoImage(file=r"eraser.png")
     eraserImage = photoEraser.subsample(5, 5)
     eraser = Button(tools_frame, image=eraserImage,
                     command=lambda: Sketch.eraseLine(self))
     eraser.place(x=505, y=2)
 
+    # define background color button
     photoBucket = PhotoImage(file=r"colorBucket.png")
     bucketImage = photoBucket.subsample(5, 5)
     fill = Button(tools_frame, image=bucketImage,
@@ -313,15 +321,18 @@ class Sketch():
     canvas.create_rectangle(0, 0, 700, 600, fill=bgColor)
     Sketch.showPalette(self)
 
+  # close sketch window
   def closeWindow(self):
     window.destroy()
 
+  # reset canvas
   def createCanvas(self):
     global canvas
     canvas.delete('all')
     canvas.configure(bg='white')
     Sketch.showPalette(self)
 
+  # function to draw with pen
   def draw(self, event):
     global x1, y1
     x, y = event.x, event.y
@@ -331,31 +342,37 @@ class Sketch():
                          width=Sketch.getScaleValue(self))
     x1, y1 = x, y
 
+  # function to erase
   def eraseLine(self):
     global bgColor, color
     color = bgColor
 
+  # function to change background color
   def fillCanvas(self):
     global bgColor
     bgColor = color
     canvas.create_rectangle(0, 0, 700, 600, fill=bgColor)
     Sketch.showPalette(self)
 
+  # function to get chosen color
   def getColor(self):
     global color
     hex = colorchooser.askcolor(title="Edit colors")
     color = hex[1]
     return color
 
+  # function to get the size of the pen or eraser
   def getScaleValue(self):
     global var
     brushSize = str(var.get())
     return brushSize
 
+  # function to reset pen coordinates after releasing mouse button
   def reset(self, event):
     global x1, y1
     x1, y1 = None, None
 
+  # function to save the sketch as an image
   def saveImage(self):
     global canvas
     canvas.postscript(colormode='color', file="sketch.eps")
@@ -363,6 +380,7 @@ class Sketch():
     image.save("Images/sketch.png")
     Sketch.showPalette(self)
 
+  # function to save and send sketch as an image
   def sendImage(self):
     sketchImagePath = os.path.join(dirname, 'Images/sketch.png')
     Sketch.saveImage(self)
@@ -373,99 +391,78 @@ class Sketch():
     send_button.invoke()
     Sketch.closeWindow(self)
 
+  # function to display chosen pen color
   def showColor(newColor):
     global color
     color = newColor
 
+  # function to show color palette
   def showPalette(frame):
     global whiteButton, yellowButton, goldButton, orangeButton, darkorangeButton, redButton, maroonButton, pinkButton, deeppinkButton, purpleButton, blueButton, turquoiseButton, green2Button, greenButton, brownButton, grayButton, gray29Button, blackButton, paletteButton
     whiteButton = Button(frame, bg='white', relief=RIDGE, width=4, height=1,
                          command=lambda: Sketch.showColor('white'))
     whiteButton.place(x=1, y=1)
-
     yellowButton = Button(frame, bg='yellow', relief=RIDGE, width=4, height=1,
                           command=lambda: Sketch.showColor('yellow'))
     yellowButton.place(x=50, y=1)
-
     goldButton = Button(frame, bg='gold', relief=RIDGE, width=4, height=1,
                         command=lambda: Sketch.showColor('gold'))
     goldButton.place(x=100, y=1)
-
     orangeButton = Button(frame, bg='orange', relief=RIDGE, width=4, height=1,
                           command=lambda: Sketch.showColor('orange'))
     orangeButton.place(x=150, y=1)
-
     darkorangeButton = Button(frame, bg='DarkOrange1', relief=RIDGE, width=4,
                               height=1,
                               command=lambda: Sketch.showColor('DarkOrange1'))
     darkorangeButton.place(x=200, y=1)
-
     redButton = Button(frame, bg='red', relief=RIDGE, width=4, height=1,
                        command=lambda: Sketch.showColor('red'))
     redButton.place(x=250, y=1)
-
     maroonButton = Button(frame, bg='maroon', relief=RIDGE, width=4, height=1,
                           command=lambda: Sketch.showColor('maroon'))
     maroonButton.place(x=300, y=1)
-
     pinkButton = Button(frame, bg='pink', relief=RIDGE, width=4, height=1,
                         command=lambda: Sketch.showColor('pink'))
     pinkButton.place(x=350, y=1)
-
     deeppinkButton = Button(frame, bg='DeepPink2', relief=RIDGE, width=4,
                             height=1,
                             command=lambda: Sketch.showColor('DeepPink2'))
     deeppinkButton.place(x=400, y=1)
-
     purpleButton = Button(frame, bg='purple', relief=RIDGE, width=4, height=1,
                           command=lambda: Sketch.showColor('purple'))
     purpleButton.place(x=450, y=1)
-
     blueButton = Button(frame, bg='blue', relief=RIDGE, width=4, height=1,
                         command=lambda: Sketch.showColor('blue'))
     blueButton.place(x=1, y=30)
-
     turquoiseButton = Button(frame, bg='turquoise1', relief=RIDGE, width=4,
                              height=1,
                              command=lambda: Sketch.showColor('turquoise1'))
     turquoiseButton.place(x=50, y=30)
-
     green2Button = Button(frame, bg='green2', relief=RIDGE, width=4, height=1,
                           command=lambda: Sketch.showColor('green2'))
     green2Button.place(x=100, y=30)
-
     greenButton = Button(frame, bg='green', relief=RIDGE, width=4, height=1,
                          command=lambda: Sketch.showColor('green'))
     greenButton.place(x=150, y=30)
-
     brownButton = Button(frame, bg='brown4', relief=RIDGE, width=4, height=1,
                          command=lambda: Sketch.showColor('brown4'))
     brownButton.place(x=200, y=30)
-
     saddlebrownButton = Button(frame, bg='saddlebrown', relief=RIDGE, width=4,
                                height=1,
                                command=lambda: Sketch.showColor('saddlebrown'))
     saddlebrownButton.place(x=250, y=30)
-
     brownButton = Button(frame, bg='beige', relief=RIDGE, width=4, height=1,
                          command=lambda: Sketch.showColor('beige'))
     brownButton.place(x=300, y=30)
-
     grayButton = Button(frame, bg='gray', relief=RIDGE, width=4, height=1,
                         command=lambda: Sketch.showColor('gray'))
     grayButton.place(x=350, y=30)
-
     gray29Button = Button(frame, bg='gray29', relief=RIDGE, width=4, height=1,
                           command=lambda: Sketch.showColor('gray29'))
     gray29Button.place(x=400, y=30)
-
     blackButton = Button(frame, bg='black', relief=RIDGE, width=4, height=1,
                          command=lambda: Sketch.showColor('black'))
     blackButton.place(x=450, y=30)
-
-    paletteButton = Button(frame, text="More colors", width=12, height=2,
-                           command=lambda: Sketch.getColor)
-    paletteButton.place(x=395, y=65)
 
 
 class Chat(Frame):
@@ -580,8 +577,6 @@ class Chat(Frame):
                             yscrollcommand=self.scroll1)
     self.listBox1.configure(bg='#e3dbd4', font=('HelveticaNeue', 10))
     self.listBox1.bind("<<ListboxSelect>>", lambda x: self.open_file1())
-    self.listBox1.bind("<<ListboxSelect>>",
-                       lambda x: self.replyMessage(self.partner[1]))
 
     self.listBox2 = Listbox(self.middleFrameChat, height=30, width=25,
                             yscrollcommand=self.scroll2)
@@ -774,17 +769,6 @@ class Chat(Frame):
           self.listBox1.yview(END)
           self.listBox2.insert('end', '')  # some space to enhance appeal
           self.listBox1.insert('end', '')
-
-  def replyMessage(self, chatID):
-    chat = self.chat_function.get_full_chat(chatID)
-    for i in range(1, len(chat)):
-      chat_message = chat[i][0].split(
-          "#split:#")  # a chat-message is like: username#split:#message, so we need to split this two
-      partner_username = chat_message[0]  # from who is the message
-    index = self.listBox1.curselection()
-    message = self.listBox1.get(index[0])
-    self.text_field.insert(0, partner_username + "\n: " + message)
-    self.send_button.invoke()
 
   def updateContent(self, chatID):
     self.add(chatID)
